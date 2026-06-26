@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дмитрий Скуржанский — Motion Designer / Art Director</title>
+<style>
+  :root{
+    --ink:#0e0b08;
+    --ink-2:#17120d;
+    --panel:#1f1813;
+    --panel-2:#261d16;
+    --line:#3a2e23;
+    --line-warm:#4a3826;
+    --fog:#a89a8a;
+    --chalk:#efe8de;
+    --white:#fdfaf4;
+    --amber:#ff8f33;
+    --amber-soft:#ffc888;
+    --gold:#e6b365;
+    --gold-deep:#c4923f;
+    --beam:#4ce0c0;
+    --display:'Oswald', 'Arial Narrow', sans-serif;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Manrope',system-ui,sans-serif;
+    background:
+      radial-gradient(ellipse 130% 90% at 50% -10%, rgba(255,143,51,.10), transparent 60%),
+      radial-gradient(ellipse 100% 70% at 100% 100%, rgba(230,179,101,.08), transparent 55%),
+      radial-gradient(ellipse 80% 50% at 0% 50%, rgba(196,146,63,.05), transparent 60%),
+      var(--ink);
+    background-attachment:fixed;
+    color:var(--chalk);
+    line-height:1.55;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--amber);color:#000}
+
+  /* ---------- film grain + beam ambience ---------- */
+  .grain{
+    position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- animated background design layer ---------- */
+  .bg-fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .bg-grid{
+    position:absolute;inset:-2px;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 0%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 0%,transparent 75%);
+  }
+  .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.6}
+  .orb-1{width:50vw;height:50vw;left:-14vw;top:-8vw;
+    background:radial-gradient(circle,rgba(255,143,51,.40),transparent 68%);
+    animation:float1 22s ease-in-out infinite alternate}
+  .orb-2{width:42vw;height:42vw;right:-12vw;top:34vh;
+    background:radial-gradient(circle,rgba(230,179,101,.28),transparent 68%);
+    animation:float2 26s ease-in-out infinite alternate}
+  .orb-3{width:38vw;height:38vw;left:18vw;bottom:-14vw;
+    background:radial-gradient(circle,rgba(196,146,63,.20),transparent 68%);
+    animation:float1 30s ease-in-out infinite alternate-reverse}
+  @keyframes float1{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,40px) scale(1.12)}}
+  @keyframes float2{from{transform:translate(0,0) scale(1)}to{transform:translate(-50px,-30px) scale(1.1)}}
+  /* drifting particles */
+  .particles span{
+    position:absolute;display:block;width:3px;height:3px;border-radius:50%;
+    background:var(--gold);opacity:.0;
+    animation:rise-dot linear infinite;
+  }
+  @keyframes rise-dot{
+    0%{transform:translateY(20px);opacity:0}
+    10%{opacity:.5}
+    90%{opacity:.5}
+    100%{transform:translateY(-110vh);opacity:0}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .orb,.particles span{animation:none}
+  }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;justify-content:flex-end;
+    padding:18px 40px;
+    background:linear-gradient(180deg,rgba(10,10,12,.92),rgba(10,10,12,0));
+    backdrop-filter:blur(6px);
+  }
+  .brand{font-family:var(--display);font-size:1.5rem;letter-spacing:.08em;color:var(--white)}
+  .brand b{color:var(--amber)}
+  .navlinks{display:flex;gap:30px}
+  .navlinks a{
+    color:var(--fog);text-decoration:none;font-size:.82rem;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;transition:color .25s;
+  }
+  .navlinks a:hover{color:var(--white)}
+  .nav-cta{
+    color:var(--white)!important;border:1px solid var(--line);padding:8px 18px;border-radius:40px;transition:.25s;
+  }
+  .nav-cta:hover{border-color:var(--amber);background:var(--amber);color:#000!important}
+
+  /* language switch */
+  .lang-switch{display:flex;gap:2px;border:1px solid var(--line);border-radius:40px;padding:3px;margin-left:8px}
+  .lang-switch button{
+    background:none;border:none;color:var(--fog);font-family:inherit;font-size:.74rem;font-weight:700;
+    letter-spacing:.08em;padding:6px 12px;border-radius:30px;cursor:pointer;transition:.2s;
+  }
+  .lang-switch button.on{background:var(--amber);color:#000}
+  .lang-switch button:not(.on):hover{color:var(--white)}
+
+  /* owner-only controls: hidden unless body.owner */
+  .owner-only{display:none!important}
+  body.owner .owner-only{display:flex!important}
+  body.owner .add-tile{display:flex!important}
+  .add-tile{display:none}
+  .burger{display:none;background:none;border:none;color:var(--white);font-size:1.6rem;cursor:pointer}
+
+  /* ---------- hero ---------- */
+  header{
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    padding:140px 40px 80px;position:relative;overflow:hidden;z-index:1;
+  }
+  .beam{
+    position:absolute;top:-30%;right:-10%;width:70vw;height:140vh;
+    background:radial-gradient(ellipse at center,rgba(255,138,43,.16),transparent 55%);
+    transform:rotate(18deg);filter:blur(30px);pointer-events:none;
+    animation:drift 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift{from{transform:rotate(18deg) translateY(0)}to{transform:rotate(14deg) translateY(40px)}}
+  .eyebrow{
+    display:flex;align-items:center;gap:14px;color:var(--gold);
+    font-size:.78rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;margin-bottom:28px;
+    opacity:0;animation:rise .8s .1s forwards;
+  }
+  .eyebrow::before{content:"";width:42px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+  .hero-title{
+    font-family:var(--display);
+    font-size:clamp(2.4rem,11vw,11rem);
+    line-height:.86;letter-spacing:.01em;
+    text-transform:uppercase;
+  }
+  .hero-title span{display:block;overflow:hidden}
+  .hero-title span i{display:block;font-style:normal;transform:translateY(110%);animation:reveal .9s cubic-bezier(.2,.8,.2,1) forwards;
+    background:linear-gradient(94deg,var(--white) 55%,var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero-title span:nth-child(2) i{animation-delay:.12s}
+  .hero-title .out{
+    color:transparent;-webkit-text-stroke:1.5px var(--amber);
+    background:none;-webkit-background-clip:initial;background-clip:initial;
+  }
+  @keyframes reveal{to{transform:translateY(0)}}
+  @keyframes rise{to{opacity:1}}
+  .hero-sub{
+    max-width:560px;margin-top:34px;color:var(--fog);font-size:1.08rem;font-weight:400;
+    opacity:0;animation:rise .8s .5s forwards;
+  }
+  .hero-sub b{color:var(--chalk);font-weight:600}
+  .hero-meta{
+    margin-top:46px;display:flex;flex-wrap:wrap;gap:14px;
+    opacity:0;animation:rise .8s .65s forwards;
+  }
+  .chip{
+    font-size:.78rem;font-weight:600;letter-spacing:.06em;color:var(--chalk);
+    border:1px solid var(--line);padding:9px 16px;border-radius:40px;text-transform:uppercase;
+    transition:.25s;
+  }
+  .chip:hover{border-color:var(--amber);color:var(--amber)}
+  .scroll-hint{
+    position:absolute;bottom:34px;left:40px;color:var(--fog);font-size:.72rem;letter-spacing:.2em;
+    text-transform:uppercase;display:flex;align-items:center;gap:10px;opacity:0;animation:rise 1s 1s forwards;
+  }
+  .scroll-hint .ln{width:1px;height:40px;background:linear-gradient(var(--fog),transparent);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+  /* ---------- section frame ---------- */
+  section{padding:110px 40px;position:relative;max-width:1320px;margin:0 auto;z-index:1}
+  .sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:54px;flex-wrap:wrap}
+  .sec-num{font-family:var(--display);font-size:1.1rem;color:var(--amber);letter-spacing:.1em}
+  .sec-title{
+    font-family:var(--display);font-size:clamp(2.2rem,6vw,4.5rem);
+    text-transform:uppercase;line-height:1;position:relative;
+    background:linear-gradient(100deg,var(--white) 60%,var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .sec-note{color:var(--fog);font-size:.92rem;max-width:380px;margin-left:auto}
+
+  /* ---------- about / specializations ---------- */
+  .about-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:start}
+  .about-lead{font-size:1.3rem;font-weight:300;color:var(--chalk);line-height:1.6}
+  .about-lead b{font-weight:700;color:var(--white)}
+  .spec-list{display:flex;flex-direction:column;gap:2px}
+  .spec-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px 0;border-top:1px solid var(--line);font-size:.95rem;
+    transition:.3s;
+  }
+  .spec-row:last-child{border-bottom:1px solid var(--line)}
+  .spec-row span:first-child{color:var(--chalk);font-weight:600}
+  .spec-row span:last-child{color:var(--fog);font-size:.8rem;letter-spacing:.08em}
+  .spec-row:hover{padding-left:12px;color:var(--amber)}
+  .spec-row:hover span:first-child{color:var(--amber)}
+
+  .tools{margin-top:40px;display:flex;flex-wrap:wrap;gap:10px}
+  .tool{
+    font-size:.78rem;font-weight:600;letter-spacing:.05em;color:var(--fog);
+    border:1px solid var(--line);padding:7px 14px;border-radius:6px;transition:.25s;
+  }
+  .tool:hover{color:var(--white);border-color:var(--amber-soft)}
+
+  /* ---------- portfolio ---------- */
+  .pf-bar{display:flex;align-items:center;gap:14px;margin-bottom:36px;flex-wrap:wrap}
+  .filters{display:flex;gap:10px;flex-wrap:wrap}
+  .filter{
+    background:none;border:1px solid var(--line);color:var(--fog);
+    padding:8px 16px;border-radius:40px;font-size:.78rem;font-weight:600;cursor:pointer;
+    letter-spacing:.06em;text-transform:uppercase;transition:.2s;font-family:inherit;
+  }
+  .filter:hover{color:var(--white)}
+  .filter.on{background:var(--amber);border-color:var(--amber);color:#000}
+  .add-btn{
+    margin-left:auto;background:var(--white);color:#000;border:none;cursor:pointer;
+    padding:11px 22px;border-radius:40px;font-size:.82rem;font-weight:700;letter-spacing:.04em;
+    display:flex;align-items:center;gap:8px;transition:.2s;font-family:inherit;
+  }
+  .add-btn:hover{background:var(--amber);transform:translateY(-2px)}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;
+  }
+  .card{
+    position:relative;border-radius:14px;overflow:hidden;background:var(--panel);
+    border:1px solid var(--line);aspect-ratio:4/3;cursor:pointer;
+    transition:.35s cubic-bezier(.2,.8,.2,1);
+  }
+  .card:hover{transform:translateY(-6px);border-color:var(--amber-soft);box-shadow:0 24px 50px -20px rgba(255,138,43,.35)}
+  .card img,.card video{width:100%;height:100%;object-fit:cover;display:block;transition:.5s}
+  .card:hover img,.card:hover video{transform:scale(1.06)}
+
+  /* gallery slider inside card */
+  .card-slider{position:relative;width:100%;height:100%;overflow:hidden}
+  .card-slider img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    opacity:0;transition:opacity .45s;pointer-events:none;
+  }
+  .card-slider img.active{opacity:1}
+  .card:hover .card-slider img{transform:scale(1.06)}
+  .slider-dots{
+    position:absolute;bottom:48px;left:50%;transform:translateX(-50%);
+    display:flex;gap:5px;z-index:4;pointer-events:none;
+  }
+  .slider-dots span{
+    width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);transition:.3s;
+  }
+  .slider-dots span.on{background:var(--amber);transform:scale(1.3)}
+  .slider-count{
+    position:absolute;bottom:12px;right:12px;z-index:4;
+    background:rgba(10,10,12,.7);backdrop-filter:blur(4px);
+    color:var(--fog);font-size:.68rem;font-weight:600;padding:3px 8px;border-radius:20px;
+  }
+
+  /* lightbox gallery */
+  .lb-gallery{position:relative;max-width:92vw;max-height:90vh;display:flex;align-items:center;gap:14px}
+  .lb-gallery img{max-width:82vw;max-height:86vh;border-radius:10px;display:block;object-fit:contain}
+  .lb-nav{
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;
+    border-radius:50%;width:44px;height:44px;font-size:1.4rem;cursor:pointer;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;transition:.2s;
+  }
+  .lb-nav:hover{background:var(--amber);border-color:var(--amber);color:#000}
+  .lb-gallery-counter{
+    position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
+    color:var(--fog);font-size:.8rem;letter-spacing:.06em;white-space:nowrap;
+  }
+  .card-tag{
+    position:absolute;top:12px;left:12px;z-index:2;background:rgba(10,10,12,.78);
+    backdrop-filter:blur(4px);color:var(--gold);font-size:.66rem;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:30px;
+  }
+  .card-ov{
+    position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:flex-end;
+    padding:20px;background:linear-gradient(180deg,transparent 40%,rgba(10,10,12,.92));
+    opacity:0;transition:.35s;
+  }
+  .card:hover .card-ov{opacity:1}
+  .card-ttl{font-family:var(--display);font-size:1.5rem;color:var(--white);letter-spacing:.03em;line-height:1}
+  .card-desc{color:var(--fog);font-size:.82rem;margin-top:6px}
+  .card-ctrls{
+    position:absolute;top:10px;right:10px;z-index:5;display:flex;gap:5px;
+    opacity:0;transition:.25s;
+  }
+  .card:hover .card-ctrls{opacity:1}
+  .cc-btn{
+    width:30px;height:30px;border-radius:8px;border:none;cursor:pointer;
+    background:rgba(13,11,9,.82);backdrop-filter:blur(6px);color:var(--white);
+    font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.2s;
+    line-height:1;
+  }
+  .cc-btn:hover{background:var(--amber);color:#000}
+  .cc-btn:disabled{opacity:.3;cursor:default}
+  .cc-btn:disabled:hover{background:rgba(13,11,9,.82);color:var(--white)}
+  .cc-del:hover{background:#e23636;color:#fff}
+  .play{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
+    width:54px;height:54px;border-radius:50%;background:rgba(255,138,43,.92);
+    display:flex;align-items:center;justify-content:center;pointer-events:none;
+  }
+  .play::after{content:"";border-left:14px solid #000;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:4px}
+
+  /* empty / add tile */
+  .add-tile{
+    border:2px dashed var(--line);border-radius:14px;aspect-ratio:4/3;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+    cursor:pointer;color:var(--fog);transition:.3s;background:rgba(255,255,255,.01);
+  }
+  .add-tile:hover{border-color:var(--amber);color:var(--amber);background:rgba(255,138,43,.04)}
+  .add-tile .plus{font-size:2.6rem;font-weight:300;line-height:.7}
+  .add-tile span{font-size:.82rem;font-weight:600;letter-spacing:.04em}
+
+  /* ---------- experience timeline ---------- */
+  .xp{position:relative;padding-left:0}
+  .xp-item{
+    display:grid;grid-template-columns:200px 1fr;gap:40px;padding:30px 0;
+    border-top:1px solid var(--line);transition:.3s;
+  }
+  .xp-item:hover{background:linear-gradient(90deg,rgba(255,138,43,.04),transparent);padding-left:14px}
+  .xp-co{font-family:var(--display);font-size:1.6rem;color:var(--white);letter-spacing:.03em;line-height:1.05}
+  .xp-place{color:var(--amber);font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:8px}
+  .xp-role{color:var(--chalk);font-weight:700;font-size:1.02rem;margin-bottom:8px}
+  .xp-body{color:var(--fog);font-size:.92rem}
+  .xp-body em{color:var(--gold);font-style:normal;font-weight:600}
+
+  /* ---------- contact ---------- */
+  .cta{
+    text-align:center;padding:140px 40px;position:relative;overflow:hidden;max-width:none;z-index:1;
+    background:radial-gradient(ellipse at 50% 120%,rgba(255,138,43,.14),transparent 60%);
+  }
+  .cta h2{font-family:var(--display);font-size:clamp(2.6rem,9vw,7rem);color:var(--white);text-transform:uppercase;line-height:1.04;letter-spacing:.02em}
+  .cta h2 .out{color:transparent;-webkit-text-stroke:1.5px var(--amber);display:inline-block;margin-top:.12em}
+  .cta p{color:var(--fog);max-width:480px;margin:24px auto 40px;font-size:1.05rem}
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    text-decoration:none;font-weight:700;font-size:.92rem;letter-spacing:.03em;padding:15px 30px;border-radius:44px;
+    transition:.25s;display:inline-flex;align-items:center;gap:9px;
+  }
+  .btn-primary{background:var(--amber);color:#000}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 40px -12px rgba(255,138,43,.6)}
+  .btn-ghost{border:1px solid var(--line);color:var(--white)}
+  .btn-ghost:hover{border-color:var(--white)}
+  .contact-meta{margin-top:54px;display:flex;gap:34px;justify-content:center;flex-wrap:wrap;color:var(--fog);font-size:.86rem}
+  .contact-meta a{color:var(--chalk);text-decoration:none}
+  .contact-meta a:hover{color:var(--amber)}
+
+  footer{padding:36px 40px;text-align:center;color:var(--fog);font-size:.78rem;border-top:1px solid var(--line);position:relative;z-index:1}
+
+  /* ---------- modal ---------- */
+  .modal{
+    position:fixed;inset:0;z-index:100;background:rgba(5,5,7,.86);backdrop-filter:blur(8px);
+    display:none;align-items:center;justify-content:center;padding:24px;
+  }
+  .modal.open{display:flex;animation:fade .25s}
+  @keyframes fade{from{opacity:0}}
+  .modal-box{
+    background:var(--ink-2);border:1px solid var(--line);border-radius:18px;
+    width:100%;max-width:480px;padding:34px;position:relative;
+  }
+  .modal-box h3{font-family:var(--display);font-size:1.9rem;color:var(--white);letter-spacing:.04em;margin-bottom:4px}
+  .modal-box .hint{color:var(--fog);font-size:.86rem;margin-bottom:24px}
+  .field{margin-bottom:18px}
+  .field label{display:block;color:var(--chalk);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+  .field input,.field select{
+    width:100%;background:var(--ink);border:1px solid var(--line);border-radius:10px;
+    padding:13px 15px;color:var(--white);font-family:inherit;font-size:.94rem;transition:.2s;
+  }
+  .field input:focus,.field select:focus{outline:none;border-color:var(--amber)}
+  .drop{
+    border:2px dashed var(--line);border-radius:12px;padding:30px;text-align:center;
+    cursor:pointer;transition:.25s;color:var(--fog);
+  }
+  .drop:hover,.drop.drag{border-color:var(--amber);color:var(--amber);background:rgba(255,138,43,.04)}
+  .drop .big{font-size:2rem;line-height:1}
+  .drop small{display:block;margin-top:8px;font-size:.78rem}
+  .preview{margin-top:14px;border-radius:10px;overflow:hidden;max-height:180px;display:none}
+  .preview img,.preview video{width:100%;max-height:180px;object-fit:cover;display:block}
+  .modal-actions{display:flex;gap:12px;margin-top:26px}
+  .modal-actions button{flex:1;padding:13px;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:inherit;border:none;transition:.2s}
+  .save{background:var(--amber);color:#000}
+  .save:hover{background:var(--amber-soft)}
+  .save:disabled{opacity:.4;cursor:not-allowed}
+  .cancel{background:transparent;border:1px solid var(--line)!important;color:var(--chalk)}
+  .cancel:hover{border-color:var(--white)!important}
+  .close-x{position:absolute;top:18px;right:18px;background:none;border:none;color:var(--fog);font-size:1.5rem;cursor:pointer}
+  .close-x:hover{color:var(--white)}
+
+  /* upload method tabs */
+  .tabs{display:flex;gap:6px;margin-bottom:20px;background:var(--ink);padding:5px;border-radius:12px}
+  .tab{
+    flex:1;background:none;border:none;color:var(--fog);padding:10px 6px;border-radius:8px;
+    font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:.02em;
+  }
+  .tab.on{background:var(--amber);color:#000}
+  .tab:not(.on):hover{color:var(--white)}
+  .pane{display:none}
+  .pane.on{display:block}
+  .note-box{
+    background:rgba(61,240,198,.06);border:1px solid rgba(61,240,198,.25);border-radius:10px;
+    padding:12px 14px;color:var(--beam);font-size:.78rem;line-height:1.5;margin-top:4px;
+  }
+  .note-box code{background:rgba(0,0,0,.4);padding:1px 6px;border-radius:4px;color:var(--white);font-size:.82em}
+
+  /* lightbox */
+  .lightbox{position:fixed;inset:0;z-index:120;background:rgba(3,3,5,.95);display:none;align-items:center;justify-content:center;padding:40px}
+  .lightbox.open{display:flex;animation:fade .25s}
+  .lightbox img,.lightbox video{max-width:90vw;max-height:86vh;border-radius:10px}
+  .lightbox .close-x{font-size:2.4rem;top:24px;right:30px}
+
+  .toast{
+    position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(120px);
+    background:var(--white);color:#000;padding:13px 26px;border-radius:44px;font-weight:700;font-size:.88rem;
+    z-index:140;transition:.4s cubic-bezier(.2,.8,.2,1);box-shadow:0 14px 40px -10px rgba(0,0,0,.6);
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(40px);transition:.8s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:860px){
+    nav{justify-content:flex-end}
+    .navlinks{
+      display:none;position:absolute;top:62px;right:22px;
+      flex-direction:column;gap:0;background:var(--ink-2);
+      border:1px solid var(--line);border-radius:14px;padding:8px;min-width:200px;
+      box-shadow:0 20px 50px -16px rgba(0,0,0,.7);
+    }
+    .navlinks.show{display:flex}
+    .navlinks a{padding:13px 16px;border-radius:9px}
+    .navlinks a:hover{background:var(--panel)}
+    .nav-cta{border:none!important;background:var(--amber);color:#000!important;margin-top:4px}
+    .burger{display:block}
+    nav{padding:14px 22px}
+
+    /* hero */
+    header{padding:100px 20px 60px}
+    .hero-title{font-size:clamp(2.2rem,10vw,4rem);letter-spacing:-.01em}
+    .hero-sub{font-size:.95rem}
+    .hero-meta{gap:8px}
+    .chip{font-size:.72rem;padding:7px 12px}
+    .scroll-hint{left:20px}
+    .eyebrow{font-size:.7rem}
+
+    /* sections */
+    section{padding:70px 20px}
+    .sec-title{font-size:clamp(1.8rem,7vw,3rem)}
+    .sec-head{margin-bottom:32px;gap:10px}
+    .sec-note{margin-left:0;font-size:.82rem}
+
+    /* about */
+    .about-grid{grid-template-columns:1fr;gap:32px}
+    .about-lead{font-size:1rem}
+    .tools{gap:8px}
+    .tool{font-size:.72rem;padding:6px 11px}
+
+    /* portfolio */
+    .pf-bar{flex-direction:column;align-items:flex-start;gap:12px}
+    .filters{gap:7px}
+    .filter{font-size:.72rem;padding:7px 12px}
+    .add-btn{width:100%;justify-content:center}
+    .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+    .card{aspect-ratio:1/1}
+    .card-ov{opacity:1;background:linear-gradient(180deg,transparent 40%,rgba(10,10,12,.95))}
+    .card-ttl{font-size:1.1rem}
+    .card-ctrls{opacity:1}
+
+    /* experience */
+    .xp-item{grid-template-columns:1fr;gap:8px;padding:20px 0}
+    .xp-co{font-size:1.3rem}
+    .xp-body{font-size:.86rem}
+
+    /* cta */
+    .cta{padding:80px 20px}
+    .cta h2{font-size:clamp(2rem,10vw,4rem)}
+    .cta-row{flex-direction:column;align-items:center}
+    .btn{width:100%;justify-content:center;text-align:center}
+    .contact-meta{flex-direction:column;gap:14px;align-items:center}
+
+    /* modal */
+    .modal{padding:12px}
+    .modal-box{padding:20px;max-height:90vh;overflow-y:auto}
+    .tabs{flex-wrap:wrap}
+    .tab{font-size:.72rem;padding:8px 4px}
+
+    /* lightbox */
+    .lightbox{padding:16px}
+    .lb-nav{width:36px;height:36px;font-size:1.1rem}
+  }
+
+  @media(max-width:400px){
+    .hero-title{font-size:9vw}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="bg-fx" aria-hidden="true">
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="particles" id="particles"></div>
+</div>
+
+<nav>
+  <div class="navlinks" id="navlinks">
+    <a href="#about" onclick="closeNav()" data-ru="О себе" data-en="About">О себе</a>
+    <a href="#work" onclick="closeNav()" data-ru="Работы" data-en="Work">Работы</a>
+    <a href="#experience" onclick="closeNav()" data-ru="Опыт" data-en="Experience">Опыт</a>
+    <a href="#contact" class="nav-cta" onclick="closeNav()" data-ru="Связаться" data-en="Contact">Связаться</a>
+  </div>
+  <div class="lang-switch">
+    <button id="lang-ru" class="on" onclick="setLang('ru')">RU</button>
+    <button id="lang-en" onclick="setLang('en')">EN</button>
+  </div>
+  <button class="burger" onclick="document.getElementById('navlinks').classList.toggle('show')">☰</button>
+</nav>
+
+<!-- HERO -->
+<header>
+  <div class="beam"></div>
+  <div class="eyebrow" data-ru="Motion · Арт-дирекшн · 3D" data-en="Motion · Art Direction · 3D">Motion · Арт-дирекшн · 3D</div>
+  <h1 class="hero-title">
+    <span><i data-ru="Дмитрий" data-en="Dmitry">Дмитрий</i></span>
+    <span><i class="out" data-ru="Скуржанский" data-en="Skurzhansky">Скуржанский</i></span>
+  </h1>
+  <p class="hero-sub"
+     data-ru="Режиссёр, моушн-дизайнер и арт-директор. 25 лет практики на стыке кино, телевидения, игровой индустрии и цифрового дизайна — от информационной графики для федеральных СМИ до дизайн-систем в международных IT-компаниях."
+     data-en="Director, motion designer and art director. 25 years of practice across film, television, the gaming industry and digital design — from broadcast information graphics for national media to design systems at international technology companies.">
+    Режиссёр, моушн-дизайнер и арт-директор. 25 лет практики на стыке кино,
+    телевидения, игровой индустрии и цифрового дизайна — от информационной графики
+    для федеральных СМИ до дизайн-систем в международных IT-компаниях.
+  </p>
+  <div class="hero-meta">
+    <div class="chip">Motion Design</div>
+    <div class="chip" data-ru="3D / Графика" data-en="3D / Graphics">3D / Графика</div>
+    <div class="chip">Art Direction</div>
+    <div class="chip" data-ru="Видеомонтаж" data-en="Video Editing">Видеомонтаж</div>
+    <div class="chip">UI / UX</div>
+  </div>
+  <div class="scroll-hint"><span class="ln"></span> <span data-ru="Прокрутите вниз" data-en="Scroll down">Прокрутите вниз</span></div>
+</header>
+
+<!-- ABOUT -->
+<section id="about" class="reveal">
+  <div class="sec-head">
+    <h2 class="sec-title" data-ru="О себе" data-en="About">О себе</h2>
+    <p class="sec-note" data-ru="Воронеж, Россия · удалённая работа · командировки по согласованию" data-en="Voronezh, Russia · remote work · travel on request">Воронеж, Россия · удалённая работа · командировки по согласованию</p>
+  </div>
+  <div class="about-grid">
+    <div>
+      <p class="about-lead"
+         data-ru="Профессиональная экспертиза в дизайне, монтаже и композиции кадра. Карьерный путь охватывает разработку компьютерных игр, кино- и медиапроизводство, информационную графику для федеральных СМИ и визуальные решения для игровых продуктов. Работаю в широком стилистическом диапазоне и обеспечиваю стабильно высокий уровень результата на каждом этапе проекта."
+         data-en="Professional expertise in design, editing and frame composition. A career spanning video-game development, film and media production, broadcast information graphics for national media, and visual solutions for gaming products. I work across a broad stylistic range and deliver a consistently high standard at every stage of a project.">
+        Профессиональная экспертиза в дизайне, монтаже и композиции кадра.
+        Карьерный путь охватывает разработку компьютерных игр, кино- и медиапроизводство,
+        информационную графику для федеральных СМИ и визуальные решения для игровых
+        продуктов. Работаю в широком стилистическом диапазоне и обеспечиваю стабильно
+        высокий уровень результата на каждом этапе проекта.
+      </p>
+      <div class="tools">
+        <div class="tool">After Effects</div>
+        <div class="tool">Premiere Pro</div>
+        <div class="tool">Photoshop</div>
+        <div class="tool">Illustrator</div>
+        <div class="tool">InDesign</div>
+        <div class="tool">3ds Max</div>
+        <div class="tool">Figma</div>
+      </div>
+    </div>
+    <div class="spec-list">
+      <div class="spec-row"><span data-ru="Моушн-дизайн" data-en="Motion design">Моушн-дизайн</span><span>Core</span></div>
+      <div class="spec-row"><span data-ru="Графический художник 2D / 3D" data-en="2D / 3D graphic artist">Графический художник 2D / 3D</span><span>Core</span></div>
+      <div class="spec-row"><span data-ru="Арт-директор / Креативный директор" data-en="Art director / Creative director">Арт-директор / Креативный директор</span><span>Lead</span></div>
+      <div class="spec-row"><span data-ru="Режиссура · видеомонтаж" data-en="Directing · video editing">Режиссура · видеомонтаж</span><span>Pro</span></div>
+      <div class="spec-row"><span data-ru="Дизайн-системы · UI / UX" data-en="Design systems · UI / UX">Дизайн-системы · UI / UX</span><span>Pro</span></div>
+      <div class="spec-row"><span data-ru="Обработка видео · композитинг" data-en="Video processing · compositing">Обработка видео · композитинг</span><span>Pro</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="work" class="reveal">
+  <div class="sec-head">
+    <h2 class="sec-title" data-ru="Работы" data-en="Work">Работы</h2>
+    <p class="sec-note" data-ru="Избранные проекты — моушн, 3D, графика, интерфейсы и видео." data-en="Selected projects — motion, 3D, graphics, interfaces and video.">Избранные проекты — моушн, 3D, графика, интерфейсы и видео.</p>
+  </div>
+  <div class="pf-bar">
+    <div class="filters" id="filters">
+      <button class="filter on" data-f="all" data-ru="Все" data-en="All">Все</button>
+      <button class="filter" data-f="motion">Motion</button>
+      <button class="filter" data-f="3d">3D</button>
+      <button class="filter" data-f="graphic" data-ru="Графика" data-en="Graphics">Графика</button>
+      <button class="filter" data-f="ui">UI / UX</button>
+      <button class="filter" data-f="video" data-ru="Видео" data-en="Video">Видео</button>
+    </div>
+    <button class="add-btn owner-only" onclick="openModal()" data-ru="+ Добавить работу" data-en="+ Add work">+ Добавить работу</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="reveal">
+  <div class="sec-head">
+    <h2 class="sec-title" data-ru="Опыт" data-en="Experience">Опыт</h2>
+    <p class="sec-note" data-ru="25 лет в дизайне, кино, игровой индустрии и медиа" data-en="25 years across design, film, gaming and media">25 лет в дизайне, кино, игровой индустрии и медиа</p>
+  </div>
+  <div class="xp">
+    <div class="xp-item">
+      <div><div class="xp-co">ADVIVA</div><div class="xp-place" data-ru="Кипр · IT" data-en="Cyprus · IT">Кипр · IT</div></div>
+      <div><div class="xp-role" data-ru="Lead Motion Designer" data-en="Lead Motion Designer">Lead Motion Designer</div>
+        <div class="xp-body" data-ru="Ведение проектов и дизайн-систем для веба и мобильных. Постановка ТЗ, контроль качества работы Jr./Middle дизайнеров, моушн-дизайн, 3D-графика, презентации клиентам." data-en="Leading projects and design systems for web and mobile. Writing specs, quality control of Jr./Middle designers, motion design, 3D graphics, client presentations.">Ведение проектов и дизайн-систем для веба и мобильных. Постановка ТЗ, контроль качества работы Jr./Middle дизайнеров, моушн-дизайн, 3D-графика, презентации клиентам.</div></div>
+    </div>
+    <div class="xp-item">
+      <div><div class="xp-co">YADRO</div><div class="xp-place" data-ru="Москва · IT" data-en="Moscow · IT">Москва · IT</div></div>
+      <div><div class="xp-role" data-ru="Senior / Motion / UI-UX Designer" data-en="Senior / Motion / UI-UX Designer">Senior / Motion / UI-UX Designer</div>
+        <div class="xp-body" data-ru="Разработка дизайн-системы и библиотек, внедрение дизайна в разработку, моушн-дизайн, 3D, иконки и иллюстрации, поддержка бренда." data-en="Developing the design system and libraries, handing design off to engineering, motion design, 3D, icons and illustrations, brand support.">Разработка дизайн-системы и библиотек, внедрение дизайна в разработку, моушн-дизайн, 3D, иконки и иллюстрации, поддержка бренда.</div></div>
+    </div>
+    <div class="xp-item">
+      <div><div class="xp-co">Yazino</div><div class="xp-place" data-ru="Лондон · Испания · iGaming" data-en="London · Spain · iGaming">Лондон · Испания · iGaming</div></div>
+      <div><div class="xp-role" data-ru="Арт-директор" data-en="Art Director">Арт-директор</div>
+        <div class="xp-body" data-ru="Проектирование сложных площадок для Real Estate, Pharma, Banking, Fintech, Logistics. Дизайн-системы, моушн, презентации." data-en="Designing complex platforms for Real Estate, Pharma, Banking, Fintech, Logistics. Design systems, motion, presentations.">Проектирование сложных площадок для Real Estate, Pharma, Banking, Fintech, Logistics. Дизайн-системы, моушн, презентации.</div></div>
+    </div>
+    <div class="xp-item">
+      <div><div class="xp-co" data-ru="Акселератор СТАЛЬ" data-en="STEEL Accelerator">Акселератор СТАЛЬ</div><div class="xp-place" data-ru="Москва · ВДНХ" data-en="Moscow · VDNKh">Москва · ВДНХ</div></div>
+      <div><div class="xp-role" data-ru="Арт-директор · Motion · Монтаж · 2D/3D" data-en="Art Director · Motion · Editing · 2D/3D">Арт-директор · Motion · Монтаж · 2D/3D</div>
+        <div class="xp-body" data-ru="Дизайн цифровых сервисов для стартапов, информационная архитектура, внутренние платформы, контроль команды дизайна." data-en="Design of digital services for startups, information architecture, internal platforms, design-team oversight.">Дизайн цифровых сервисов для стартапов, информационная архитектура, внутренние платформы, контроль команды дизайна.</div></div>
+    </div>
+    <div class="xp-item">
+      <div><div class="xp-co" data-ru="Медиа-Трест" data-en="Media-Trest">Медиа-Трест</div><div class="xp-place" data-ru="Москва · ТВ / Кино" data-en="Moscow · TV / Film">Москва · ТВ / Кино</div></div>
+      <div><div class="xp-role" data-ru="Режиссёр · Motion · Видеомонтаж" data-en="Director · Motion · Video Editing">Режиссёр · Motion · Видеомонтаж</div>
+        <div class="xp-body" data-ru="Документальные и социальные проекты для телеканала МИР и Москвы: «Неизвестный Лермонтов», «Кинодвижение», «Наш Джаз». Заставки, шапки, отбивки, 3D, монтаж." data-en="Documentary and social projects for the MIR TV channel and the city of Moscow: 'Unknown Lermontov', 'Cinema Movement', 'Our Jazz'. Idents, title sequences, bumpers, 3D, editing.">Документальные и социальные проекты для телеканала МИР и Москвы: «Неизвестный Лермонтов», «Кинодвижение», «Наш Джаз». Заставки, шапки, отбивки, 3D, монтаж.</div></div>
+    </div>
+    <div class="xp-item">
+      <div><div class="xp-co" data-ru="Меркатор" data-en="Mercator">Меркатор</div><div class="xp-place" data-ru="Москва · Инфографика" data-en="Moscow · Infographics">Москва · Инфографика</div></div>
+      <div><div class="xp-role" data-ru="Художник-аниматор" data-en="Animator / Artist">Художник-аниматор</div>
+        <div class="xp-body" data-ru="Видео-инфографика для канала Россия, программ «Вести» и «Вести недели»." data-en="Video infographics for the Rossiya channel and the news shows 'Vesti' and 'Vesti Nedeli'.">Видео-инфографика для канала Россия, программ «Вести» и «Вести недели».</div></div>
+    </div>
+    <div class="xp-item">
+      <div><div class="xp-co" data-ru="АиФ" data-en="AiF">АиФ</div><div class="xp-place" data-ru="Москва · СМИ" data-en="Moscow · Media">Москва · СМИ</div></div>
+      <div><div class="xp-role" data-ru="Зам. главного художника · Иллюстратор" data-en="Deputy Chief Artist · Illustrator">Зам. главного художника · Иллюстратор</div>
+        <div class="xp-body" data-ru="3D-ролики для сайта, инфографика и 3D-инфографика, креативное оформление, коллажи." data-en="3D clips for the website, infographics and 3D infographics, creative layouts, collages.">3D-ролики для сайта, инфографика и 3D-инфографика, креативное оформление, коллажи.</div></div>
+    </div>
+    <div class="xp-item">
+      <div><div class="xp-co" data-ru="Комсомольская правда" data-en="Komsomolskaya Pravda">Комсомольская правда</div><div class="xp-place" data-ru="Москва · СМИ" data-en="Moscow · Media">Москва · СМИ</div></div>
+      <div><div class="xp-role" data-ru="Графический дизайнер" data-en="Graphic Designer">Графический дизайнер</div>
+        <div class="xp-body" data-ru="Инфографика и оформление номера, 3D-ролики для сайта, оперативные визуальные решения, коллажи." data-en="Infographics and issue layout, 3D clips for the website, fast turnaround visuals, collages.">Инфографика и оформление номера, 3D-ролики для сайта, оперативные визуальные решения, коллажи.</div></div>
+    </div>
+    <div class="xp-item">
+      <div><div class="xp-co">NIKITA</div><div class="xp-place" data-ru="Москва · Игры" data-en="Moscow · Games">Москва · Игры</div></div>
+      <div><div class="xp-role" data-ru="Арт-директор" data-en="Art Director">Арт-директор</div>
+        <div class="xp-body" data-ru="Управление командами художников, геймдизайн и левел-дизайн, моделинг и текстуринг персонажей, интерфейсы, спецэффекты, найм и обучение." data-en="Managing art teams, game and level design, character modeling and texturing, interfaces, special effects, hiring and training.">Управление командами художников, геймдизайн и левел-дизайн, моделинг и текстуринг персонажей, интерфейсы, спецэффекты, найм и обучение.</div></div>
+    </div>
+    <div class="xp-item">
+      <div><div class="xp-co">Smart Games</div><div class="xp-place" data-ru="Москва · Игры" data-en="Moscow · Games">Москва · Игры</div></div>
+      <div><div class="xp-role" data-ru="3D Дизайнер" data-en="3D Designer">3D Дизайнер</div>
+        <div class="xp-body" data-ru="Анимационные 3D-объекты, визуализация, пост-обработка, ТЗ и планирование." data-en="Animated 3D objects, visualization, post-processing, specs and planning.">Анимационные 3D-объекты, визуализация, пост-обработка, ТЗ и планирование.</div></div>
+    </div>
+    <div class="xp-item">
+      <div><div class="xp-co">Burut CT</div><div class="xp-place" data-ru="Воронеж · Игры" data-en="Voronezh · Games">Воронеж · Игры</div></div>
+      <div><div class="xp-role" data-ru="Проектный менеджер · Главный дизайнер · Lead Level Design" data-en="Project Manager · Lead Designer · Lead Level Design">Проектный менеджер · Главный дизайнер · Lead Level Design</div>
+        <div class="xp-body" data-ru="Игры «Спарта», «KREED», «Златогорье 1–2». Геймдизайн, левел-дизайн, моделинг, интерфейсы, спецэффекты, планирование контента, управление командой 100+ специалистов." data-en="Games 'Sparta', 'KREED', 'Zlatogorie 1–2'. Game design, level design, modeling, interfaces, special effects, content planning, managing a team of 100+ specialists.">Игры «Спарта», «KREED», «Златогорье 1–2». Геймдизайн, левел-дизайн, моделинг, интерфейсы, спецэффекты, планирование контента, управление командой 100+ специалистов.</div></div>
+    </div>
+  </div>
+  <div style="margin-top:40px;color:var(--fog);font-size:.9rem;border-top:1px solid var(--line);padding-top:24px">
+    <strong style="color:var(--chalk)" data-ru="Образование:" data-en="Education:">Образование:</strong> <span data-ru="Воронежское художественное училище · Воронежская академия искусств (заочно)" data-en="Voronezh Art College · Voronezh Academy of Arts (distance learning)">Воронежское художественное училище · Воронежская академия искусств (заочно)</span>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="cta" id="contact">
+  <h2><span data-ru="Обсудим" data-en="Let's discuss">Обсудим</span><br><span class="out" data-ru="ваш проект" data-en="your project">ваш проект</span></h2>
+  <p data-ru="Доступен для полной, частичной и проектной занятости — в офисе или удалённо. Опишите задачу, и я отвечу в ближайшее время." data-en="Available for full-time, part-time and project engagements — on-site or remote. Describe your task and I will respond shortly.">Доступен для полной, частичной и проектной занятости — в офисе или удалённо. Опишите задачу, и я отвечу в ближайшее время.</p>
+  <div class="cta-row">
+    <a href="https://t.me/Jon_Jonson" target="_blank" class="btn btn-primary">✦ Telegram @Jon_Jonson</a>
+    <a href="https://www.behance.net/dmitryskurzha" target="_blank" class="btn btn-ghost">Behance →</a>
+  </div>
+  <div class="contact-meta">
+    <span>📞 <a href="tel:+79255488990">+7 (925) 548-89-90</a></span>
+    <span>✉ <a href="mailto:mr_skru@mail.ru">mr_skru@mail.ru</a></span>
+    <span>📍 <span data-ru="Воронеж, Россия" data-en="Voronezh, Russia">Воронеж, Россия</span></span>
+  </div>
+</div>
+
+<footer>© <span id="yr"></span> <span data-ru="Дмитрий Скуржанский — Motion Designer / Art Director" data-en="Dmitry Skurzhansky — Motion Designer / Art Director">Дмитрий Скуржанский — Motion Designer / Art Director</span></footer>
+
+<!-- ADD MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="close-x" onclick="closeModal()">×</button>
+    <h3 data-ru="Новая работа" data-en="New work">Новая работа</h3>
+    <p class="hint" data-ru="Загрузите изображение или видео со своего компьютера" data-en="Upload an image or video from your computer">Загрузите изображение или видео со своего компьютера</p>
+    <div class="field">
+      <label data-ru="Название" data-en="Title">Название</label>
+      <input id="m-title" type="text" placeholder="…">
+    </div>
+    <div class="field">
+      <label data-ru="Описание" data-en="Description">Описание</label>
+      <input id="m-desc" type="text" placeholder="…">
+    </div>
+    <div class="field">
+      <label data-ru="Категория" data-en="Category">Категория</label>
+      <select id="m-cat">
+        <option value="motion">Motion</option>
+        <option value="3d">3D</option>
+        <option value="graphic" data-ru="Графика" data-en="Graphics">Графика</option>
+        <option value="ui">UI / UX</option>
+        <option value="video" data-ru="Видео" data-en="Video">Видео</option>
+      </select>
+    </div>
+    <div class="tabs">
+      <button class="tab on" data-pane="upload" onclick="switchTab('upload')" data-ru="Загрузить файл" data-en="Upload file">Загрузить файл</button>
+      <button class="tab" data-pane="gallery" onclick="switchTab('gallery')" data-ru="Группа фото" data-en="Photo group">Группа фото</button>
+      <button class="tab" data-pane="folder" onclick="switchTab('folder')" data-ru="Видео из папки" data-en="Video from folder">Видео из папки</button>
+      <button class="tab" data-pane="link" onclick="switchTab('link')" data-ru="Ссылка" data-en="Link">Ссылка</button>
+    </div>
+
+    <!-- pane: upload -->
+    <div class="pane on" id="pane-upload">
+      <div class="drop" id="drop">
+        <div class="big">⬆</div>
+        <div data-ru="Перетащите сюда или нажмите, чтобы выбрать" data-en="Drag here or click to choose">Перетащите сюда или нажмите, чтобы выбрать</div>
+        <small>PNG · JPG · GIF · MP4 · WebM</small>
+      </div>
+      <input id="m-file" type="file" accept="image/*,video/*" style="display:none">
+      <div class="note-box" data-ru="Подходит для фото и коротких видео (до ~50 МБ). Хранится прямо в браузере." data-en="Good for photos and short videos (up to ~50 MB). Stored right in the browser.">Подходит для фото и коротких видео (до ~50 МБ). Хранится прямо в браузере.</div>
+    </div>
+
+    <!-- pane: gallery (multiple images) -->
+    <div class="pane" id="pane-gallery">
+      <div class="drop" id="drop-gallery">
+        <div class="big">⬆⬆</div>
+        <div data-ru="Выберите несколько фото сразу" data-en="Select multiple photos at once">Выберите несколько фото сразу</div>
+        <small data-ru="PNG · JPG · до 10 изображений" data-en="PNG · JPG · up to 10 images">PNG · JPG · до 10 изображений</small>
+      </div>
+      <input id="m-gallery-files" type="file" accept="image/*" multiple style="display:none">
+      <div id="gallery-thumbs" style="display:none;margin-top:12px;display:none;gap:6px;flex-wrap:wrap"></div>
+      <div class="note-box" style="margin-top:10px" data-ru="Несколько рендеров, фото процесса — загружаются одной карточкой с листалкой." data-en="Multiple renders, process shots — uploaded as one card with a swipe gallery.">Несколько рендеров, фото процесса — загружаются одной карточкой с листалкой.</div>
+    </div>
+
+    <!-- pane: folder (heavy video) -->
+    <div class="pane" id="pane-folder">
+      <div class="field" style="margin-bottom:12px">
+        <label data-ru="Имя видеофайла" data-en="Video file name">Имя видеофайла</label>
+        <input id="m-folder" type="text" placeholder="showreel-2025.mp4" oninput="checkReady()">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label data-ru="Превью-кадр (необязательно)" data-en="Poster frame (optional)">Превью-кадр (необязательно)</label>
+        <input id="m-poster" type="text" placeholder="showreel-cover.jpg">
+      </div>
+      <div class="note-box"
+        data-ru="Лучший способ для тяжёлых видео в высоком качестве — без ограничений по весу. Положите видео в папку videos/ рядом с сайтом и впишите его имя. Превью-кадр (если есть) — в папку posters/."
+        data-en="Best way to show heavy high-quality videos — no size limit. Put the video in the videos/ folder next to the site and type its name. Poster frame (if any) goes in posters/.">
+        Лучший способ для <b>тяжёлых видео в высоком качестве</b> — без ограничений по весу.<br>
+        Положите видео в папку <code>videos/</code> рядом с сайтом и впишите его имя.<br>
+        Превью-кадр (если есть) — в папку <code>posters/</code>.
+      </div>
+    </div>
+
+    <!-- pane: link (YouTube / Vimeo / Behance) -->
+    <div class="pane" id="pane-link">
+      <div class="field" style="margin-bottom:0">
+        <label data-ru="Ссылка на проект" data-en="Project link">Ссылка на проект</label>
+        <input id="m-link" type="text" placeholder="YouTube · Vimeo · Behance" oninput="checkReady();detectLink(this.value)">
+      </div>
+      <div id="link-hint" class="note-box" style="margin-top:10px" data-ru="YouTube, Vimeo — встроится плеером. Behance — откроется в новой вкладке." data-en="YouTube, Vimeo — embeds as player. Behance — opens in a new tab.">YouTube, Vimeo — встроится плеером. Behance — откроется в новой вкладке.</div>
+    </div>
+
+    <div class="preview" id="preview"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeModal()" data-ru="Отмена" data-en="Cancel">Отмена</button>
+      <button class="save" id="save" onclick="saveWork()" disabled data-ru="Добавить" data-en="Add">Добавить</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="close-x">×</button>
+  <div id="lb-content"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+/* ---------- language (RU / EN) ---------- */
+let LANG = (location.hash.includes('en') || (navigator.language||'').toLowerCase().startsWith('en')) ? 'en' : 'ru';
+function setLang(lang){
+  LANG = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-ru]').forEach(el=>{
+    const val = el.getAttribute('data-'+lang);
+    if(val!=null) el.textContent = val;
+  });
+  document.getElementById('lang-ru').classList.toggle('on', lang==='ru');
+  document.getElementById('lang-en').classList.toggle('on', lang==='en');
+  document.title = lang==='en'
+    ? 'Dmitry Skurzhansky — Motion Designer / Art Director'
+    : 'Дмитрий Скуржанский — Motion Designer / Art Director';
+  if(typeof render==='function' && window.__rendered) render();
+}
+
+/* ---------- owner mode (only owner can edit) ---------- */
+const OWNER_KEY = 'skurzha-2025';
+const params = new URLSearchParams(location.search);
+const isOwner = params.get('edit') === OWNER_KEY;
+if(isOwner) document.body.classList.add('owner');
+
+/* ---------- drifting particles ---------- */
+(function makeParticles(){
+  const wrap = document.getElementById('particles');
+  if(!wrap) return;
+  const n = window.innerWidth < 700 ? 14 : 26;
+  for(let i=0;i<n;i++){
+    const s = document.createElement('span');
+    const dur = 12 + Math.random()*16;
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.bottom = '-10px';
+    s.style.animationDuration = dur + 's';
+    s.style.animationDelay = -Math.random()*dur + 's';
+    s.style.opacity = '0';
+    if(Math.random() > .5){ s.style.background = 'var(--amber)'; }
+    s.style.transform = `scale(${0.6 + Math.random()*1.2})`;
+    wrap.appendChild(s);
+  }
+})();
+
+const DB = 'skurzha_portfolio_v1';
+let works = [];
+let pending = null;
+
+/* ---------- Cloudinary config ---------- */
+const CLD = {
+  cloud: 'dvav1ov0s',
+  preset: 'ml_default',
+  upload: 'https://api.cloudinary.com/v1_1/dvav1ov0s/auto/upload',
+};
+
+/* ---------- JSONBin config (хранит список работ) ---------- */
+const JBIN = {
+  id:  '6a3d50a0da38895dfefe2d2f',
+  key: '$2a$10$pIRVk88.uj0o0FW8hQ6J..PAB/GAObHKDDjKlJtuG1XR80GHooJ4a',
+  url: 'https://api.jsonbin.io/v3/b/6a3d50a0da38895dfefe2d2f'
+};
+
+/* -- upload a file to Cloudinary, returns secure_url -- */
+async function cldUpload(file, folder='portfolio/media'){
+  const fd = new FormData();
+  fd.append('upload_preset', CLD.preset);
+  fd.append('folder', folder);
+  fd.append('file', file);
+  const r = await fetch(CLD.upload, {method:'POST', body:fd});
+  if(!r.ok) throw new Error('Cloudinary upload failed: ' + r.status);
+  const j = await r.json();
+  return j.secure_url;
+}
+
+/* -- сохранить список работ в JSONBin -- */
+async function cldSaveIndex(list){
+  try{
+    const body = JSON.stringify({works: list.map(w=>({...w, images: w.images||undefined}))});
+    const r = await fetch(JBIN.url, {
+      method: 'PUT',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JBIN.key
+      },
+      body
+    });
+    if(!r.ok) console.error('JSONBin save failed:', r.status, await r.text());
+    return r.ok;
+  } catch(e){
+    console.error('JSONBin save error:', e);
+    return false;
+  }
+}
+
+/* -- загрузить список работ из JSONBin -- */
+async function cldLoadIndex(){
+  try{
+    const r = await fetch(JBIN.url + '/latest', {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'X-Master-Key': JBIN.key,
+        'X-Bin-Meta': 'false'
+      }
+    });
+    if(!r.ok) return [];
+    const j = await r.json();
+    return (j.record && j.record.works) ? j.record.works : [];
+  } catch(e){
+    console.warn('JSONBin load failed:', e);
+    return [];
+  }
+}
+
+/* ---------- IndexedDB — local cache only ---------- */
+let idb;
+const openDB = () => new Promise((res,rej)=>{
+  const r = indexedDB.open(DB,2);
+  r.onupgradeneeded = e => {
+    const db = e.target.result;
+    if(!db.objectStoreNames.contains('works'))
+      db.createObjectStore('works',{keyPath:'id'});
+  };
+  r.onsuccess = e => { idb = e.target.result; res(); };
+  r.onerror = e => rej(e);
+});
+const dbAll = () => new Promise(res=>{
+  const tx = idb.transaction('works','readonly').objectStore('works').getAll();
+  tx.onsuccess = () => res(tx.result.sort((a,b)=>b.id-a.id));
+});
+const dbPut = w => new Promise(res=>{ idb.transaction('works','readwrite').objectStore('works').put(w).onsuccess = res; });
+const dbDel = id => new Promise(res=>{ idb.transaction('works','readwrite').objectStore('works').delete(id).onsuccess = res; });
+const dbClear = () => new Promise(res=>{ idb.transaction('works','readwrite').objectStore('works').clear().onsuccess = res; });
+
+/* ---------- seed demo cards on first run ---------- */
+const SEED = [
+  {id:1,cat:'motion',title:'Заставки для ТВ',desc:'Канал МИР · документальные циклы',type:'svg',data:gradSVG('#ff7a18','#3df0c6','MOTION')},
+  {id:2,cat:'3d',title:'3D-инфографика',desc:'АиФ · ролики для сайта',type:'svg',data:gradSVG('#3df0c6','#16161d','3D')},
+  {id:3,cat:'graphic',title:'Видео-инфографика',desc:'Вести · канал Россия',type:'svg',data:gradSVG('#ffae5e','#ff7a18','INFO')},
+  {id:4,cat:'ui',title:'Дизайн-система',desc:'YADRO · веб + мобильные',type:'svg',data:gradSVG('#26262f','#3df0c6','UI/UX')},
+  {id:5,cat:'video',title:'Социальная реклама',desc:'Для кинотеатров Москвы',type:'svg',data:gradSVG('#ff7a18','#0a0a0c','VIDEO')},
+  {id:6,cat:'3d',title:'Игровые проекты',desc:'Burut · Златогорье / KREED',type:'svg',data:gradSVG('#3df0c6','#ff7a18','GAMES')}
+];
+
+function gradSVG(a,b,label){
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'>
+    <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+    <stop offset='0' stop-color='${a}'/><stop offset='1' stop-color='${b}'/></linearGradient></defs>
+    <rect width='400' height='300' fill='#0a0a0c'/>
+    <rect width='400' height='300' fill='url(#g)' opacity='0.22'/>
+    <text x='200' y='160' font-family='Bebas Neue,sans-serif' font-size='52' fill='${a}' text-anchor='middle' letter-spacing='4' opacity='0.85'>${label}</text>
+    <text x='200' y='195' font-family='Manrope,sans-serif' font-size='11' fill='#8a8a98' text-anchor='middle' letter-spacing='3'>ПРИМЕР · ЗАМЕНИТЕ СВОЕЙ РАБОТОЙ</text>
+  </svg>`;
+  return 'data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svg)));
+}
+
+/* ---------- render ---------- */
+let activeFilter = 'all';
+
+function mediaThumb(w){
+  if(w.type==='gallery'){
+    const imgs = w.images.map((src,i)=>
+      `<img src="${src}" class="${i===0?'active':''}" data-idx="${i}">`
+    ).join('');
+    const dots = w.images.length>1 ? `<div class="slider-dots">${w.images.map((_,i)=>`<span class="${i===0?'on':''}"></span>`).join('')}</div>` : '';
+    const count = w.images.length>1 ? `<div class="slider-count">1 / ${w.images.length}</div>` : '';
+    return `<div class="card-slider" data-id="${w.id}">${imgs}${dots}${count}</div>`;
+  }
+  if(w.type==='video'){
+    return `<video src="${w.data}" muted loop playsinline onmouseover="this.play()" onmouseout="this.pause()"></video><div class="play"></div>`;
+  }
+  if(w.type==='folder'){
+    const poster = w.poster ? `posters/${w.poster}` : '';
+    return `<video src="videos/${w.data}"${poster?` poster="${poster}"`:''} muted loop playsinline preload="metadata" onmouseover="this.play()" onmouseout="this.pause()"></video><div class="play"></div>`;
+  }
+  if(w.type==='embed'){
+    const thumb = w.poster || ytThumb(w.data);
+    return `${thumb?`<img src="${thumb}" alt="${w.title}">`:`<div style="width:100%;height:100%;background:var(--panel)"></div>`}<div class="play"></div>`;
+  }
+  if(w.type==='behance'){
+    return `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1769ff22,#0a0a0c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px">
+      <div style="font-size:2.4rem;font-family:var(--display);letter-spacing:.06em;color:#1769ff">Bē</div>
+      <div style="color:var(--fog);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase">Behance</div>
+    </div>`;
+  }
+  return `<img src="${w.data}" alt="${w.title}">`;
+}
+
+/* gallery auto-advance */
+const sliderTimers = {};
+function startSlider(el, id, images){
+  if(images.length<2) return;
+  let idx=0;
+  sliderTimers[id] = setInterval(()=>{
+    const imgs = el.querySelectorAll('img');
+    const dots = el.querySelectorAll('.slider-dots span');
+    const cnt  = el.querySelector('.slider-count');
+    imgs[idx].classList.remove('active');
+    dots[idx]?.classList.remove('on');
+    idx = (idx+1) % images.length;
+    imgs[idx].classList.add('active');
+    dots[idx]?.classList.add('on');
+    if(cnt) cnt.textContent = `${idx+1} / ${images.length}`;
+  }, 2200);
+}
+function stopSlider(id){ clearInterval(sliderTimers[id]); delete sliderTimers[id]; }
+
+function render(){
+  const grid = document.getElementById('grid');
+  const list = activeFilter==='all' ? works : works.filter(w=>w.cat===activeFilter);
+  Object.keys(sliderTimers).forEach(k=>stopSlider(k));
+  grid.innerHTML = '';
+  list.forEach((w, i)=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    const canReorder = activeFilter==='all';
+    const ctrls = `
+      <div class="card-ctrls owner-only">
+        ${canReorder?`<button class="cc-btn" title="Левее" onclick="event.stopPropagation();moveWork(${w.id},-1)" ${i===0?'disabled':''}>‹</button>`:''}
+        <button class="cc-btn" title="Редактировать" onclick="event.stopPropagation();editWork(${w.id})">✎</button>
+        <button class="cc-btn cc-del" title="Удалить" onclick="event.stopPropagation();delWork(${w.id})">×</button>
+        ${canReorder?`<button class="cc-btn" title="Правее" onclick="event.stopPropagation();moveWork(${w.id},1)" ${i===list.length-1?'disabled':''}>›</button>`:''}
+      </div>`;
+    card.innerHTML = `
+      <span class="card-tag">${labelFor(w.cat)}${w.type==='gallery'&&w.images?` · ${w.images.length}`:''}</span>
+      ${ctrls}
+      ${mediaThumb(w)}
+      <div class="card-ov">
+        <div class="card-ttl">${w.title}</div>
+        ${w.desc?`<div class="card-desc">${w.desc}</div>`:''}
+      </div>`;
+    card.onclick = () => { if(w.type==='behance') window.open(w.data,'_blank'); else openLightbox(w); };
+    if(w.type==='gallery' && w.images && w.images.length>1){
+      setTimeout(()=>{
+        const sl = card.querySelector('.card-slider');
+        if(sl) startSlider(sl, w.id, w.images);
+      }, 100);
+    }
+    grid.appendChild(card);
+  });
+  const tile = document.createElement('div');
+  tile.className = 'add-tile owner-only';
+  const addLabel = LANG==='en' ? 'Add work' : 'Добавить работу';
+  tile.innerHTML = `<div class="plus">+</div><span>${addLabel}</span>`;
+  tile.onclick = openModal;
+  grid.appendChild(tile);
+  if(activeFilter!=='all' && document.body.classList.contains('owner')){
+    const hint=document.createElement('div');
+    hint.style.cssText='grid-column:1/-1;color:var(--fog);font-size:.8rem;text-align:center;padding:8px 0';
+    hint.textContent = LANG==='en'
+      ? 'Switch to "All" to reorder works'
+      : 'Чтобы менять порядок работ, выберите фильтр «Все»';
+    grid.appendChild(hint);
+  }
+}
+function labelFor(c){return {motion:'Motion','3d':'3D',graphic:'Графика',ui:'UI/UX',video:'Видео'}[c]||c}
+
+/* ---------- reorder ---------- */
+async function moveWork(id, dir){
+  const idx = works.findIndex(w=>w.id===id);
+  if(idx<0) return;
+  const ni = idx + dir;
+  if(ni<0 || ni>=works.length) return;
+  [works[idx], works[ni]] = [works[ni], works[idx]];
+  render();
+  // обновляем локальный кэш
+  for(const w of works) await dbPut(w);
+  // сохраняем в облако
+  const ok = await cldSaveIndex(works);
+  toast(ok ? '✦ Порядок сохранён' : '⚠ Не удалось сохранить — проверьте соединение');
+}
+
+/* youtube/vimeo/behance helpers */
+function ytId(url){
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([\w-]{11})/);
+  return m ? m[1] : null;
+}
+function vimeoId(url){
+  const m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  return m ? m[1] : null;
+}
+function isBehance(url){ return /behance\.net/i.test(url); }
+function ytThumb(url){
+  const id = ytId(url);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+}
+function embedHtml(url){
+  const y = ytId(url);
+  if(y) return `<iframe src="https://www.youtube.com/embed/${y}?autoplay=1" allow="autoplay; fullscreen" allowfullscreen style="width:90vw;max-width:1100px;aspect-ratio:16/9;border:none;border-radius:10px"></iframe>`;
+  const v = vimeoId(url);
+  if(v) return `<iframe src="https://player.vimeo.com/video/${v}?autoplay=1" allow="autoplay; fullscreen" allowfullscreen style="width:90vw;max-width:1100px;aspect-ratio:16/9;border:none;border-radius:10px"></iframe>`;
+  return `<div style="color:#fff">Не удалось распознать ссылку</div>`;
+}
+function detectLink(url){
+  const hint = document.getElementById('link-hint');
+  if(!hint) return;
+  if(isBehance(url)) hint.textContent = '✦ Behance — карточка откроется в новой вкладке при клике';
+  else if(ytId(url)||vimeoId(url)) hint.textContent = '✦ Видео встроится плеером в лайтбоксе';
+  else hint.textContent = 'YouTube, Vimeo — встроится плеером. Behance — откроется в новой вкладке.';
+}
+
+/* ---------- filters ---------- */
+document.getElementById('filters').addEventListener('click',e=>{
+  if(!e.target.classList.contains('filter'))return;
+  document.querySelectorAll('.filter').forEach(f=>f.classList.remove('on'));
+  e.target.classList.add('on');
+  activeFilter = e.target.dataset.f;
+  render();
+});
+
+/* ---------- mobile nav ---------- */
+function closeNav(){document.getElementById('navlinks').classList.remove('show')}
+
+/* ---------- modal ---------- */
+let activeTab = 'upload';
+let galleryPending = []; // array of {data, name}
+let editingId = null;
+
+function openModal(){
+  editingId = null;
+  document.querySelector('#modal h3').textContent = LANG==='en'?'New work':'Новая работа';
+  document.querySelector('.tabs').style.display='flex';
+  document.getElementById('save').textContent = LANG==='en'?'Add':'Добавить';
+  document.getElementById('modal').classList.add('open');
+}
+
+/* edit existing work — only metadata (title, desc, category) */
+function editWork(id){
+  const w = works.find(x=>x.id===id);
+  if(!w) return;
+  editingId = id;
+  document.getElementById('m-title').value = w.title||'';
+  document.getElementById('m-desc').value = w.desc||'';
+  document.getElementById('m-cat').value = w.cat||'motion';
+  // hide media tabs while editing metadata
+  document.querySelector('.tabs').style.display='none';
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelector('#modal h3').textContent = LANG==='en'?'Edit work':'Редактировать работу';
+  const saveBtn = document.getElementById('save');
+  saveBtn.textContent = LANG==='en'?'Save':'Сохранить';
+  saveBtn.disabled = false;
+  document.getElementById('modal').classList.add('open');
+}
+
+function switchTab(name){
+  activeTab = name;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.pane===name));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pane-'+name).classList.add('on');
+  if(name!=='upload'){pending=null;hidePreview()}
+  if(name!=='gallery'){galleryPending=[];refreshGalleryThumbs()}
+  checkReady();
+}
+function hidePreview(){
+  const p=document.getElementById('preview');
+  p.style.display='none';p.innerHTML='';
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  ['m-title','m-desc','m-folder','m-poster','m-link'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  hidePreview();
+  document.getElementById('save').disabled=true;
+  document.querySelector('.tabs').style.display='flex';
+  pending=null;
+  galleryPending=[];
+  editingId=null;
+  refreshGalleryThumbs();
+  switchTab('upload');
+}
+function checkReady(){
+  let ok=false;
+  if(activeTab==='upload') ok=!!pending;
+  if(activeTab==='gallery') ok=galleryPending.length>0;
+  if(activeTab==='folder') ok=document.getElementById('m-folder').value.trim().length>0;
+  if(activeTab==='link'){
+    const url=document.getElementById('m-link').value.trim();
+    ok = !!(ytId(url)||vimeoId(url)||isBehance(url));
+  }
+  document.getElementById('save').disabled=!ok;
+}
+
+/* single file upload */
+const drop=document.getElementById('drop'), fileInput=document.getElementById('m-file');
+drop.onclick=()=>fileInput.click();
+['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')}));
+drop.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));
+fileInput.addEventListener('change',e=>handleFile(e.target.files[0]));
+
+function handleFile(file){
+  if(!file)return;
+  const isVid=file.type.startsWith('video');
+  const isImg=file.type.startsWith('image');
+  if(!isVid&&!isImg){toast('Только изображения или видео');return}
+  if(file.size>100*1024*1024){toast('Файл больше 100 МБ — используйте вкладку «Видео из папки»');return}
+  // show local preview immediately
+  const reader=new FileReader();
+  reader.onload=()=>{
+    pending={type:isVid?'video':'image', file, localPreview: reader.result};
+    const p=document.getElementById('preview');
+    p.style.display='block';
+    p.innerHTML=isVid
+      ?`<video src="${reader.result}" muted autoplay loop></video>`
+      :`<img src="${reader.result}">`;
+    if(!document.getElementById('m-title').value){
+      document.getElementById('m-title').value=file.name.replace(/\.[^.]+$/,'');
+    }
+    checkReady();
+  };
+  reader.readAsDataURL(file);
+}
+
+/* gallery multi-file upload */
+const dropGallery=document.getElementById('drop-gallery');
+const galleryInput=document.getElementById('m-gallery-files');
+dropGallery.onclick=()=>galleryInput.click();
+['dragover','dragenter'].forEach(ev=>dropGallery.addEventListener(ev,e=>{e.preventDefault();dropGallery.classList.add('drag')}));
+['dragleave','drop'].forEach(ev=>dropGallery.addEventListener(ev,e=>{e.preventDefault();dropGallery.classList.remove('drag')}));
+dropGallery.addEventListener('drop',e=>handleGalleryFiles(e.dataTransfer.files));
+galleryInput.addEventListener('change',e=>handleGalleryFiles(e.target.files));
+
+function handleGalleryFiles(files){
+  if(!files||!files.length)return;
+  const arr=Array.from(files).filter(f=>f.type.startsWith('image')).slice(0,10);
+  if(!arr.length){toast('Только изображения (PNG, JPG)');return}
+  galleryPending=[];
+  let loaded=0;
+  arr.forEach(file=>{
+    if(file.size>50*1024*1024){toast(`${file.name} больше 50 МБ, пропущен`);loaded++;if(loaded===arr.length){refreshGalleryThumbs();checkReady();}return}
+    const r=new FileReader();
+    r.onload=()=>{
+      galleryPending.push({file, localPreview: r.result, name:file.name});
+      loaded++;
+      if(loaded===arr.length){
+        if(!document.getElementById('m-title').value && galleryPending.length){
+          document.getElementById('m-title').value=galleryPending[0].name.replace(/[-_\d.]+[^a-zA-Zа-яА-Я]*$/,'').replace(/\.[^.]+$/,'').trim()||'Группа работ';
+        }
+        refreshGalleryThumbs();
+        checkReady();
+      }
+    };
+    r.readAsDataURL(file);
+  });
+}
+
+function refreshGalleryThumbs(){
+  const wrap=document.getElementById('gallery-thumbs');
+  if(!wrap)return;
+  if(!galleryPending.length){wrap.style.display='none';return}
+  wrap.style.display='flex';
+  wrap.innerHTML=galleryPending.map((f,i)=>
+    `<div style="position:relative;width:60px;height:60px;border-radius:6px;overflow:hidden;border:1px solid var(--line)">
+      <img src="${f.localPreview}" style="width:100%;height:100%;object-fit:cover">
+      <button onclick="removeGalleryItem(${i})" style="position:absolute;top:2px;right:2px;background:rgba(10,10,12,.8);border:none;color:#fff;width:16px;height:16px;border-radius:50%;font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1">×</button>
+    </div>`
+  ).join('') + `<span style="color:var(--fog);font-size:.8rem;align-self:center">${galleryPending.length} фото</span>`;
+}
+function removeGalleryItem(i){
+  galleryPending.splice(i,1);
+  refreshGalleryThumbs();
+  checkReady();
+}
+
+async function saveWork(){
+  const saveBtn = document.getElementById('save');
+
+  // --- EDIT MODE: update only metadata ---
+  if(editingId){
+    const w = works.find(x=>x.id===editingId);
+    if(w){
+      w.title = document.getElementById('m-title').value||'Без названия';
+      w.desc  = document.getElementById('m-desc').value;
+      w.cat   = document.getElementById('m-cat').value;
+      saveBtn.disabled = true;
+      saveBtn.textContent = '⏳…';
+      await dbPut(w);
+      await cldSaveIndex(works);
+      render();
+      closeModal();
+      toast(LANG==='en'?'Saved ✦':'Сохранено ✦');
+    }
+    return;
+  }
+
+  saveBtn.disabled = true;
+  saveBtn.textContent = '⏳ Загрузка…';
+
+  try{
+    const base={
+      id: Date.now(),
+      cat: document.getElementById('m-cat').value,
+      title: document.getElementById('m-title').value||'Без названия',
+      desc: document.getElementById('m-desc').value
+    };
+    let w=null;
+
+    if(activeTab==='upload'){
+      if(!pending)return;
+      toast('Загружаю в облако…');
+      const url = await cldUpload(pending.file, 'portfolio/media');
+      w={...base, type: pending.type, data: url};
+
+    } else if(activeTab==='gallery'){
+      if(!galleryPending.length)return;
+      toast(`Загружаю ${galleryPending.length} фото…`);
+      const urls = await Promise.all(
+        galleryPending.map(f => cldUpload(f.file, 'portfolio/gallery'))
+      );
+      w={...base, type:'gallery', images: urls, data: urls[0]};
+
+    } else if(activeTab==='folder'){
+      const name=document.getElementById('m-folder').value.trim();
+      if(!name)return;
+      w={...base, type:'folder', data:name, poster:document.getElementById('m-poster').value.trim()};
+
+    } else if(activeTab==='link'){
+      const url=document.getElementById('m-link').value.trim();
+      if(!url)return;
+      if(isBehance(url)){
+        w={...base, type:'behance', data:url};
+      } else if(ytId(url)||vimeoId(url)){
+        w={...base, type:'embed', data:url, poster:ytThumb(url)||''};
+      } else {
+        toast('Поддерживаются YouTube, Vimeo и Behance');return;
+      }
+    }
+
+    if(!w)return;
+    works.unshift(w);
+
+    // save to local cache
+    await dbPut(w);
+    // save index to Cloudinary (works without base64)
+    await cldSaveIndex(works);
+
+    render();
+    closeModal();
+    toast('Работа добавлена ✦');
+
+  } catch(err){
+    console.error(err);
+    toast('Ошибка загрузки: ' + err.message);
+    saveBtn.disabled = false;
+    saveBtn.textContent = LANG==='en'?'Add':'Добавить';
+  }
+}
+
+async function delWork(id){
+  works = works.filter(w=>w.id!==id);
+  await dbDel(id);
+  await cldSaveIndex(works);
+  render();
+  toast('Удалено');
+}
+
+/* ---------- lightbox ---------- */
+let lbGalleryIdx = 0;
+let lbGalleryWork = null;
+
+function openLightbox(w){
+  const c=document.getElementById('lb-content');
+  const big='max-width:88vw;max-height:86vh;border-radius:10px';
+  if(w.type==='video'){
+    c.innerHTML=`<video src="${w.data}" controls autoplay loop style="${big}"></video>`;
+  } else if(w.type==='folder'){
+    const poster=w.poster?` poster="posters/${w.poster}"`:'';
+    c.innerHTML=`<video src="videos/${w.data}"${poster} controls autoplay loop style="${big}"></video>`;
+  } else if(w.type==='embed'){
+    c.innerHTML=embedHtml(w.data);
+  } else if(w.type==='gallery'){
+    lbGalleryWork=w; lbGalleryIdx=0;
+    renderLbGallery();
+  } else {
+    c.innerHTML=`<img src="${w.data}" style="${big}">`;
+  }
+  if(w.type!=='gallery') document.getElementById('lightbox').classList.add('open');
+}
+
+function renderLbGallery(){
+  const w=lbGalleryWork;
+  if(!w)return;
+  const c=document.getElementById('lb-content');
+  const total=w.images.length;
+  const prev=total>1?`<button class="lb-nav" onclick="event.stopPropagation();lbStep(-1)">‹</button>`:'';
+  const next=total>1?`<button class="lb-nav" onclick="event.stopPropagation();lbStep(1)">›</button>`:'';
+  c.innerHTML=`<div class="lb-gallery">
+    ${prev}
+    <div style="position:relative">
+      <img src="${w.images[lbGalleryIdx]}" style="max-width:82vw;max-height:86vh;border-radius:10px;display:block;object-fit:contain">
+      ${total>1?`<div class="lb-gallery-counter">${lbGalleryIdx+1} / ${total}</div>`:''}
+    </div>
+    ${next}
+  </div>`;
+  document.getElementById('lightbox').classList.add('open');
+}
+function lbStep(dir){
+  const total=lbGalleryWork.images.length;
+  lbGalleryIdx=(lbGalleryIdx+dir+total)%total;
+  renderLbGallery();
+}
+
+function closeLightbox(){
+  lbGalleryWork=null; lbGalleryIdx=0;
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lb-content').innerHTML='';
+}
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ---------- scroll reveal ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ---------- init ---------- */
+(async()=>{
+  await openDB();
+
+  // показываем спиннер сразу
+  document.getElementById('grid').innerHTML =
+    `<div style="grid-column:1/-1;text-align:center;padding:80px 0;color:var(--fog);font-size:.88rem;letter-spacing:.06em">
+      <div style="font-size:1.6rem;margin-bottom:12px;opacity:.5">◌</div>
+      загрузка работ…
+    </div>`;
+
+  // локальный кэш — показываем мгновенно пока грузится облако
+  const cached = await dbAll();
+  if(cached.length){
+    works = cached;
+    render();
+    window.__rendered = true;
+    setLang(LANG);
+  }
+
+  // загружаем из JSONBin с retry
+  let cloudWorks = [];
+  for(let attempt = 1; attempt <= 3; attempt++){
+    try{
+      cloudWorks = await cldLoadIndex();
+      if(cloudWorks.length) break;
+    } catch(e){
+      if(attempt < 3) await new Promise(r=>setTimeout(r, 1000 * attempt));
+    }
+  }
+
+  if(cloudWorks.length){
+    await dbClear();
+    for(const w of cloudWorks) await dbPut(w);
+    works = cloudWorks;
+    render();
+    window.__rendered = true;
+    setLang(LANG);
+  } else if(!cached.length){
+    works = [];
+    render();
+    window.__rendered = true;
+    setLang(LANG);
+  }
+})();
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal();closeLightbox()}
+  if(e.key==='ArrowRight' && lbGalleryWork) lbStep(1);
+  if(e.key==='ArrowLeft'  && lbGalleryWork) lbStep(-1);
+});
+</script>
+</body>
+</html>
