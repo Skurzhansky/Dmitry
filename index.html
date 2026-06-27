@@ -854,13 +854,6 @@ const CLD = {
   upload: 'https://api.cloudinary.com/v1_1/dvav1ov0s/auto/upload',
 };
 
-/* ---------- JSONBin config (хранит список работ) ---------- */
-const JBIN = {
-  id:  '6a3d50a0da38895dfefe2d2f',
-  key: '$2a$10$pIRVk88.uj0o0FW8hQ6J..PAB/GAObHKDDjKlJtuG1XR80GHooJ4a',
-  url: 'https://api.jsonbin.io/v3/b/6a3d50a0da38895dfefe2d2f'
-};
-
 /* -- upload a file to Cloudinary, returns secure_url -- */
 async function cldUpload(file, folder='portfolio/media'){
   const fd = new FormData();
@@ -873,45 +866,68 @@ async function cldUpload(file, folder='portfolio/media'){
   return j.secure_url;
 }
 
-/* -- сохранить список работ в JSONBin -- */
+/* -- сохранить список работ в Cloudinary как JSON -- */
 async function cldSaveIndex(list){
   try{
-    const body = JSON.stringify({works: list.map(w=>({...w, images: w.images||undefined}))});
-    const r = await fetch(JBIN.url, {
-      method: 'PUT',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JBIN.key
-      },
-      body
+    const clean = list.map(w=>{
+      const obj = {
+        id:    w.id,
+        cat:   w.cat   || 'motion',
+        title: w.title || '',
+        desc:  w.desc  || '',
+        type:  w.type  || 'image',
+        data:  w.data  || ''
+      };
+      if(w.type==='gallery' && Array.isArray(w.images)) obj.images = w.images;
+      if(w.poster) obj.poster = w.poster;
+      return obj;
     });
-    if(!r.ok) console.error('JSONBin save failed:', r.status, await r.text());
-    return r.ok;
+
+    const payload = JSON.stringify({works: clean, savedAt: Date.now()});
+    const blob = new Blob([payload], {type:'application/json'});
+    const fd = new FormData();
+    fd.append('upload_preset', CLD.preset);
+    fd.append('folder', 'portfolio');
+    fd.append('public_id', 'index');
+    fd.append('overwrite', 'true');
+    fd.append('invalidate', 'true');
+    fd.append('resource_type', 'raw');
+    fd.append('file', blob, 'index.json');
+
+    const r = await fetch(`https://api.cloudinary.com/v1_1/${CLD.cloud}/raw/upload`, {
+      method: 'POST',
+      body: fd
+    });
+    if(!r.ok){ console.error('Cloudinary index save failed:', r.status); return false; }
+    const j = await r.json();
+    // запоминаем версию — она в URL, по ней читаем свежак
+    if(j.version){
+      try{ localStorage.setItem('idx_ver', String(j.version)); }catch(e){}
+    }
+    return true;
   } catch(e){
-    console.error('JSONBin save error:', e);
+    console.error('Index save error:', e);
     return false;
   }
 }
 
-/* -- загрузить список работ из JSONBin -- */
+/* -- загрузить список работ из Cloudinary (минуя CDN-кэш) -- */
 async function cldLoadIndex(){
-  try{
-    const r = await fetch(JBIN.url + '/latest', {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'X-Master-Key': JBIN.key,
-        'X-Bin-Meta': 'false'
-      }
-    });
-    if(!r.ok) return [];
-    const j = await r.json();
-    return (j.record && j.record.works) ? j.record.works : [];
-  } catch(e){
-    console.warn('JSONBin load failed:', e);
-    return [];
+  // пробуем несколько URL: версионный (свежий), затем обычный
+  const ver = (()=>{ try{ return localStorage.getItem('idx_ver'); }catch(e){ return null; } })();
+  const urls = [];
+  if(ver) urls.push(`https://res.cloudinary.com/${CLD.cloud}/raw/upload/v${ver}/portfolio/index.json`);
+  urls.push(`https://res.cloudinary.com/${CLD.cloud}/raw/upload/portfolio/index.json?cb=${Date.now()}`);
+
+  for(const url of urls){
+    try{
+      const r = await fetch(url, {cache:'no-store'});
+      if(!r.ok) continue;
+      const j = await r.json();
+      if(j && j.works) return j.works;
+    } catch(e){ /* пробуем следующий */ }
   }
+  return [];
 }
 
 /* ---------- IndexedDB — local cache only ---------- */
@@ -1074,7 +1090,7 @@ async function moveWork(id, dir){
 
 /* youtube/vimeo/behance helpers */
 function ytId(url){
-  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([\w-]{11})/);
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w-]{11})/);
   return m ? m[1] : null;
 }
 function vimeoId(url){
