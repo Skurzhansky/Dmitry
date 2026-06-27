@@ -866,7 +866,10 @@ async function cldUpload(file, folder='portfolio/media'){
   return j.secure_url;
 }
 
-/* -- сохранить список работ в Cloudinary как JSON -- */
+/* ---------- Firebase Realtime Database (хранит список работ) ---------- */
+const FB_URL = 'https://skurzhansky-default-rtdb.europe-west1.firebasedatabase.app/portfolio.json';
+
+/* -- сохранить список работ в Firebase -- */
 async function cldSaveIndex(list){
   try{
     const clean = list.map(w=>{
@@ -883,51 +886,30 @@ async function cldSaveIndex(list){
       return obj;
     });
 
-    const payload = JSON.stringify({works: clean, savedAt: Date.now()});
-    const blob = new Blob([payload], {type:'application/json'});
-    const fd = new FormData();
-    fd.append('upload_preset', CLD.preset);
-    fd.append('folder', 'portfolio');
-    fd.append('public_id', 'index');
-    fd.append('overwrite', 'true');
-    fd.append('invalidate', 'true');
-    fd.append('resource_type', 'raw');
-    fd.append('file', blob, 'index.json');
-
-    const r = await fetch(`https://api.cloudinary.com/v1_1/${CLD.cloud}/raw/upload`, {
-      method: 'POST',
-      body: fd
+    const r = await fetch(FB_URL, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({works: clean, savedAt: Date.now()})
     });
-    if(!r.ok){ console.error('Cloudinary index save failed:', r.status); return false; }
-    const j = await r.json();
-    // запоминаем версию — она в URL, по ней читаем свежак
-    if(j.version){
-      try{ localStorage.setItem('idx_ver', String(j.version)); }catch(e){}
-    }
+    if(!r.ok){ console.error('Firebase save failed:', r.status); return false; }
     return true;
   } catch(e){
-    console.error('Index save error:', e);
+    console.error('Firebase save error:', e);
     return false;
   }
 }
 
-/* -- загрузить список работ из Cloudinary (минуя CDN-кэш) -- */
+/* -- загрузить список работ из Firebase -- */
 async function cldLoadIndex(){
-  // пробуем несколько URL: версионный (свежий), затем обычный
-  const ver = (()=>{ try{ return localStorage.getItem('idx_ver'); }catch(e){ return null; } })();
-  const urls = [];
-  if(ver) urls.push(`https://res.cloudinary.com/${CLD.cloud}/raw/upload/v${ver}/portfolio/index.json`);
-  urls.push(`https://res.cloudinary.com/${CLD.cloud}/raw/upload/portfolio/index.json?cb=${Date.now()}`);
-
-  for(const url of urls){
-    try{
-      const r = await fetch(url, {cache:'no-store'});
-      if(!r.ok) continue;
-      const j = await r.json();
-      if(j && j.works) return j.works;
-    } catch(e){ /* пробуем следующий */ }
+  try{
+    const r = await fetch(FB_URL + '?t=' + Date.now());
+    if(!r.ok) return [];
+    const j = await r.json();
+    return (j && j.works) ? j.works : [];
+  } catch(e){
+    console.warn('Firebase load failed:', e);
+    return [];
   }
-  return [];
 }
 
 /* ---------- IndexedDB — local cache only ---------- */
